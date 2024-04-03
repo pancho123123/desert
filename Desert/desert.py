@@ -335,6 +335,8 @@ while running:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
+			pygame.quit()
+			sys.exit()
 
 	if player.jumping:
 		player.rect.bottom -= player.Y_VELOCITY
@@ -378,4 +380,6 @@ while running:
 	# Escudo.
 	draw_shield_bar(screen, 5, 5, player.shield)
 	draw_text2(screen, str(int(player.shield)) + "/100", 10, 55, 5)
+	draw_shield_bar(screen, player.rect.x, player.rect.y - 10, player.shield)
+	draw_text2(screen, str(int(player.shield)) + "/100", 10, player.rect.centerx, player.rect.y - 10)
 	pygame.display.flip()
