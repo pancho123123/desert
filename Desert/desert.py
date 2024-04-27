@@ -32,7 +32,7 @@ def draw_text2(surface, text, size, x, y):
 	text_rect.midtop = (x, y)
 	surface.blit(text_surface, text_rect)
 
-def draw_shield_bar(surface, x, y, percentage):
+def draw_hp_bar(surface, x, y, percentage):
 	BAR_LENGHT = 100
 	BAR_HEIGHT = 10
 	fill = (percentage / 100) * BAR_LENGHT
@@ -50,19 +50,19 @@ class Player(pygame.sprite.Sprite):
 		self.rect.centerx = self.rect.width
 		self.rect.bottom = HEIGHT - 30
 		self.speed_x = 0
-		self.shield = 100
+		self.hp = 100
 		self.jumping = False
 		self.Y_GRAVITY = 1
 		self.JUMP_HEIGHT = 20
 		self.Y_VELOCITY = self.JUMP_HEIGHT
 
 	def update(self):
-		self.shield += 1/24
+		self.hp += 1/24
 		self.speed_x = 0
-		if self.shield > 100:
-			self.shield = 100
-		if self.shield < 0:
-			self.shield = 0
+		if self.hp > 100:
+			self.hp = 100
+		if self.hp < 0:
+			self.hp = 0
 		keystate = pygame.key.get_pressed()
 		if keystate[pygame.K_a]:
 			self.speed_x = -10
@@ -347,24 +347,24 @@ while running:
 		
 	all_sprites.update()
 
-	if player.shield == 0:
+	if player.hp == 0:
 		game_over = True
 	
 	#colisiones - rock - player
 	hits = pygame.sprite.spritecollide(player, rock_list, False)
 	for hit in hits:
-		player.shield -= 2
+		player.hp -= 2
 		
 	#colisiones - cactus - player
 	hits2 = pygame.sprite.spritecollide(player, cactus_list, False )
 	for hit in hits2:
-		player.shield -= 2
+		player.hp -= 2
 		
 	#colisiones - jarra - player
 	hits = pygame.sprite.spritecollide(player, jarra_list, True)
 	for hit in hits:
 		score += 100
-		player.shield += randint(5,10)
+		player.hp += randint(5,10)
 		
 		jarra = Jarra()
 		all_sprites.add(jarra)
@@ -378,8 +378,8 @@ while running:
 	draw_text2(screen, str(score), 25, WIDTH // 2, 10)
 
 	# Escudo.
-	draw_shield_bar(screen, 5, 5, player.shield)
-	draw_text2(screen, str(int(player.shield)) + "/100", 10, 55, 5)
-	draw_shield_bar(screen, player.rect.x, player.rect.y - 10, player.shield)
-	draw_text2(screen, str(int(player.shield)) + "/100", 10, player.rect.centerx, player.rect.y - 10)
+	draw_hp_bar(screen, 5, 5, player.hp)
+	draw_text2(screen, str(int(player.hp)) + "/100", 10, 55, 5)
+	draw_hp_bar(screen, player.rect.x, player.rect.y - 10, player.hp)
+	draw_text2(screen, str(int(player.hp)) + "/100", 10, player.rect.centerx, player.rect.y - 10)
 	pygame.display.flip()
